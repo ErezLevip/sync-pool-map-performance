@@ -15,7 +15,8 @@ BenchmarkVariablesPoolSyncPool-16                	    6103	    207113 ns/op	    
 BenchmarkVariablesPoolSyncPoolWithChannel1k-16    	     238	   4904390 ns/op	    6355 B/op	      96 allocs/op
 BenchmarkVariablesPoolSyncPoolWithChannel10k-16    	     202	   5709154 ns/op	   20323 B/op	     158 allocs/op
 BenchmarkVariablesPoolSyncPoolWithChannel500-16    	     238	   4799105 ns/op	    5741 B/op	      94 allocs/op
- */
+BenchmarkVariablesPoolSyncPoolWithChannel10-16    	     217	   5329917 ns/op	    5710 B/op	     101 allocs/op
+*/
 
 func runParallelWithAllocatedPool(b *testing.B, n int, f func()) {
 	p, _ := ants.NewPool(n, ants.WithPreAlloc(true))
@@ -47,7 +48,7 @@ func runParallelWithAllocatedPool(b *testing.B, n int, f func()) {
 //BenchmarkVariablesPoolSyncPool-16    	    6103	    207113 ns/op	     204 B/op	       3 allocs/op
 func BenchmarkVariablesPoolSyncPool(b *testing.B) {
 	vp := newVariablesMapPool(0, false, 5)
-	runParallelWithAllocatedPool(b, 1000,  func() {
+	runParallelWithAllocatedPool(b, 1000, func() {
 		v := vp.Get()
 		v["key"] = "value"
 		v["key2"] = "value2"
@@ -59,7 +60,7 @@ func BenchmarkVariablesPoolSyncPool(b *testing.B) {
 //BenchmarkVariablesPoolSyncPoolWithChannel1k-16    	     238	   4904390 ns/op	    6355 B/op	      96 allocs/op
 func BenchmarkVariablesPoolSyncPoolWithChannel1k(b *testing.B) {
 	vp := newVariablesMapPool(1000, true, 5)
-	runParallelWithAllocatedPool(b, 1000,  func() {
+	runParallelWithAllocatedPool(b, 1000, func() {
 		v := vp.Get()
 		v["key"] = "value"
 		v["key2"] = "value2"
@@ -71,7 +72,7 @@ func BenchmarkVariablesPoolSyncPoolWithChannel1k(b *testing.B) {
 //BenchmarkVariablesPoolSyncPoolWithChannel10k-16    	     202	   5709154 ns/op	   20323 B/op	     158 allocs/op
 func BenchmarkVariablesPoolSyncPoolWithChannel10k(b *testing.B) {
 	vp := newVariablesMapPool(10000, true, 5)
-	runParallelWithAllocatedPool(b, 1000,  func() {
+	runParallelWithAllocatedPool(b, 1000, func() {
 		v := vp.Get()
 		v["key"] = "value"
 		v["key2"] = "value2"
@@ -83,7 +84,19 @@ func BenchmarkVariablesPoolSyncPoolWithChannel10k(b *testing.B) {
 //BenchmarkVariablesPoolSyncPoolWithChannel500-16    	     238	   4799105 ns/op	    5741 B/op	      94 allocs/op
 func BenchmarkVariablesPoolSyncPoolWithChannel500(b *testing.B) {
 	vp := newVariablesMapPool(500, true, 5)
-	runParallelWithAllocatedPool(b, 1000,  func() {
+	runParallelWithAllocatedPool(b, 1000, func() {
+		v := vp.Get()
+		v["key"] = "value"
+		v["key2"] = "value2"
+		m = v
+		vp.Put(v)
+	})
+}
+
+//BenchmarkVariablesPoolSyncPoolWithChannel10-16    	     217	   5329917 ns/op	    5710 B/op	     101 allocs/op
+func BenchmarkVariablesPoolSyncPoolWithChannel10(b *testing.B) {
+	vp := newVariablesMapPool(10, true, 5)
+	runParallelWithAllocatedPool(b, 1000, func() {
 		v := vp.Get()
 		v["key"] = "value"
 		v["key2"] = "value2"
