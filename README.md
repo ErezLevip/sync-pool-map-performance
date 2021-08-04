@@ -1,4 +1,8 @@
 # Sync Pool Map Performance Benchmark
+    goos: darwin
+    goarch: amd64
+    pkg: github.com/go-mysql-org/go-mysql/utils
+    cpu: Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
 
     BenchmarkVariablesPoolSyncPool-16                	    6103	    207113 ns/op	     204 B/op	       3 allocs/op
     BenchmarkVariablesPoolSyncPoolWithChannel1k-16    	     238	   4904390 ns/op	    6355 B/op	      96 allocs/op
